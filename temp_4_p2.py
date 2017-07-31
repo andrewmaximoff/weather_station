@@ -25,4 +25,4 @@ def get_val():
 
 
 if __name__ == '__main__':
-    print(get_val)
+    print(get_val())
