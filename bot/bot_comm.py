@@ -1,7 +1,14 @@
+import os
+import glob
+import time
+
+
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
 from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters, RegexHandler,
                           ConversationHandler)
 
+
+from temp import main as temp
 
 categories_keyboard = [['Температура', 'Влажность', 'Освещенность']]
 categories_markup = ReplyKeyboardMarkup(categories_keyboard)
@@ -39,5 +46,5 @@ class BotCommand(object):
     @staticmethod
     def _temperature(bot, update):
         bot.send_message(update.message.chat_id,
-                         'Я не знаю, спроси позже',
+                         '{}°C'.format(temp()),
                          reply_markup=categories_markup)

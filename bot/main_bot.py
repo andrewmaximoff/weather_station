@@ -18,8 +18,8 @@ def error(bot, update, err):
 
 
 class Bot(BotCommand):
-    def __init__(self, TOKEN):
-        self.TOKEN = TOKEN or os.environ.get('TOKEN')
+    def __init__(self):
+        self.TOKEN = os.environ.get('TOKEN')
         self.updater = Updater(self.TOKEN)
 
         dp = self.updater.dispatcher
