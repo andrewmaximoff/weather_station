@@ -21,7 +21,7 @@ def get_val():
     data = get_data()
     temperature = get_float(data, 0)
     luminosity = get_float(data, 1)
-    return [temperature, luminosity]
+    return ' '.join([temperature, luminosity])
 
 
 if __name__ == '__main__':
