@@ -10,4 +10,5 @@ def main():
 
 if __name__ == '__main__':
     with Popen(['/usr/bin/python', '-u', 'temp_4_p2.py'], stdout=PIPE, universal_newlines=True) as process:
-        temp = process.stdout
+        indicators = eval(process.stdout)
+    print(indicators)
