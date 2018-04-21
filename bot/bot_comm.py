@@ -1,16 +1,15 @@
 import os
 import glob
 import time
-
+from bot.temp import temperature, humidity
+from bot.bar import barometer
 
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
 from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters, RegexHandler,
                           ConversationHandler)
 
-
-from get_temp import main as get_temp
-
-categories_keyboard = [['Температура', 'Влажность', 'Освещенность']]
+categories_keyboard = [['Температура', 'Влажность', 'Атмосферное давление'],
+                       ['Cancel']]
 categories_markup = ReplyKeyboardMarkup(categories_keyboard)
 
 
@@ -22,7 +21,11 @@ class BotCommand(object):
         dp.add_handler(CommandHandler('start', self._start))
         dp.add_handler(RegexHandler('^(Температура)$',
                                     self._temperature))
-        dp.add_handler(CommandHandler('cancel', self._cancel, pass_user_data=True))
+        dp.add_handler(RegexHandler('^(Влажность)$',
+                                    self._humidity))
+        dp.add_handler(RegexHandler('^(Атмосферное давление)$',
+                                    self._barometer))
+        dp.add_handler(CommandHandler('Cancel', self._cancel, pass_user_data=True))
 
         return dp
 
@@ -46,5 +49,17 @@ class BotCommand(object):
     @staticmethod
     def _temperature(bot, update):
         bot.send_message(update.message.chat_id,
-                         '{}°C'.format(get_temp()),
+                         '{}'.format(temperature()),
+                         reply_markup=categories_markup)
+
+    @staticmethod
+    def _humidity(bot, update):
+        bot.send_message(update.message.chat_id,
+                         '{}'.format(humidity()),
+                         reply_markup=categories_markup)
+
+    @staticmethod
+    def _barometer(bot, update):
+        bot.send_message(update.message.chat_id,
+                         '{}'.format(barometer()),
                          reply_markup=categories_markup)
