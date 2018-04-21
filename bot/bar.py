@@ -2,7 +2,7 @@ import subprocess
 
 
 def barometer():
-    command = ["python", "test_bar.py"]
+    command = ["python", "/home/pi/weather_station/test_bar.py"]
     p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     output = p.stdout.readlines()
     output = [i.decode() for i in output]
@@ -10,7 +10,7 @@ def barometer():
 
 
 def tempr():
-    command = ["python", "test_bar.py"]
+    command = ["python", "/home/pi/weather_station/test_bar.py"]
     p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     output = p.stdout.readlines()
     output = [i.decode() for i in output]
