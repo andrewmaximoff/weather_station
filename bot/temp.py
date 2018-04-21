@@ -8,9 +8,9 @@ pin = 17
 
 def temperature():
     _, result = Adafruit_DHT.read_retry(sensor, pin)
-    return 'Temp={:.2f}'.format(result)
+    return 'Temp={:0.1f}'.format(result)
 
 
 def humidity():
     result, _ = Adafruit_DHT.read_retry(sensor, pin)
-    return 'Humidity={:.2f}'.format(result)
+    return 'Humidity={:0.1f}'.format(result)
