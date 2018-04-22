@@ -1,15 +1,19 @@
-import os
-import glob
-import time
-from bot.temp import temperature, humidity
-from bot.bar import barometer
+from threading import Thread
+
+from time import sleep
+from gpiozero import InputDevice
 
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
 from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters, RegexHandler,
                           ConversationHandler)
 
+from bot.bar import barometer
+from bot.temp import temperature, humidity
+
+
 categories_keyboard = [['Температура', 'Влажность', 'Атмосферное давление'],
-                       ['Cancel']]
+                       ['Уведомление о дожде'],
+                       ['Refresh']]
 categories_markup = ReplyKeyboardMarkup(categories_keyboard)
 
 
@@ -25,7 +29,9 @@ class BotCommand(object):
                                     self._humidity))
         dp.add_handler(RegexHandler('^(Атмосферное давление)$',
                                     self._barometer))
-        dp.add_handler(CommandHandler('Cancel', self._cancel, pass_user_data=True))
+        dp.add_handler(RegexHandler('^(Уведомление о дожде)$',
+                                    self._rain))
+        dp.add_handler(RegexHandler('^(Refresh)$', self._cancel, pass_user_data=True))
 
         return dp
 
@@ -63,3 +69,19 @@ class BotCommand(object):
         bot.send_message(update.message.chat_id,
                          '{}'.format(barometer()),
                          reply_markup=categories_markup)
+
+    def _rain(self, bot, update):
+        Thread(target=self.send_async_mass, args=(bot, update)).start()
+
+    @staticmethod
+    def send_async_mass(bot, update):
+        no_rain = InputDevice(18)
+        while True:
+            if not no_rain.is_active:
+                bot.send_message(update.message.chat_id,
+                                 '{}'.format("It's raining - get the washing in!"),
+                                 reply_markup=categories_markup)
+                break
+            sleep(1)
+
+
